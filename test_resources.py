@@ -57,6 +57,7 @@ def test_api_json_schema_resources(base_url):
 
 
 # Test - 4. Add new resource
+@pytest.mark.regres
 def test_add_resource(base_url):
     # Получаем последний id из базы данных
     conn = get_db_connection()
@@ -96,6 +97,7 @@ def test_add_resource(base_url):
 
 
 # Test - 5. Update resource by ID
+@pytest.mark.regres
 def test_update_resource(base_url):
     # Находим запись с title, содержащим "autotest"
     try:
@@ -132,6 +134,7 @@ def test_update_resource(base_url):
 
 
 # Test - 6. Look for words like autotest with using get requests
+@pytest.mark.regres
 def test_check_autotest_resources(base_url, code, request_method):
     target = base_url + "resources"
     response = requests.get(target)
@@ -161,6 +164,7 @@ def test_check_autotest_resources(base_url, code, request_method):
 
 
 # Test - 7. Check delete requests by ID
+@pytest.mark.regres
 def test_delete_autotest_resource(base_url):
     target = base_url + "resources"
     response = requests.get(target)
@@ -183,6 +187,7 @@ def test_delete_autotest_resource(base_url):
 
 
 # Test - 8. Look for all records which include autotest in a base
+@pytest.mark.regres
 def test_autotest_resource_not_found_in_postgres():
     try:
         conn = get_db_connection()
