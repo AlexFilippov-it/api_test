@@ -12,7 +12,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--method",
         default="get",
-        choices=["get", "post", "path", "delete"],
+        choices=["get", "post", "path", "delete", "post"],
         help="method to execute"
     )
 
@@ -38,3 +38,8 @@ def base_url(request):
 @pytest.fixture
 def request_method(request):
     return getattr(requests, request.config.getoption("--method"))
+
+
+@pytest.fixture
+def code():
+    return 200

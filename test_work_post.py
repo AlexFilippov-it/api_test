@@ -25,7 +25,7 @@ def test_url_content_type(base_url, request_method, pytestconfig):
 
 # Test - 3. Check validate schema from answer
 @pytest.mark.regres
-def test_api_json_schema(base_url):
+def test_api_json_schema_works(base_url):
     res = requests.get(base_url + "works")
 
     schema = {
@@ -51,7 +51,7 @@ def test_api_json_schema(base_url):
 
 # Test - 4. Add a new record for table Works and after that check it
 @pytest.mark.regres
-def test_create_work(base_url):
+def test_create_work(base_url, pytestconfig):
     target = base_url + "works"
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -69,6 +69,8 @@ def test_create_work(base_url):
 
     response = requests.post(url=target, json=data)
     assert response.status_code == 201
+    expected_content_type = pytestconfig.getoption("content_type")
+    assert response.headers["Content-Type"] == expected_content_type
 
     # Establishing a database connection
     try:
@@ -92,7 +94,7 @@ def test_create_work(base_url):
 
 # Test - 5. Check created record with using By ID from table Works
 @pytest.mark.regres
-def test_get_one_work_by_id(base_url):
+def test_get_one_work_by_id(base_url, pytestconfig):
     target = base_url + "works"
     # Получение id созданной записи из БД
     conn = get_db_connection()
@@ -113,6 +115,8 @@ def test_get_one_work_by_id(base_url):
     assert response.json()["text"] == "autotest - произвольный текcт для проверки поля", \
         "Поле 'text' не соответствует ожидаемому значению"
     assert response.json()["id"] == id, "Поле 'id' не соответствует ожидаемому значению"
+    expected_content_type = pytestconfig.getoption("content_type")
+    assert response.headers["Content-Type"] == expected_content_type
 
 
 # Test - 6. Look for a record which include "autotest" and update it with using Put request
@@ -157,7 +161,7 @@ def test_api_works_update(base_url):
 
 # Test - 7. Check delete requests
 @pytest.mark.regres
-def test_api_works_delete(base_url):
+def test_api_works_delete(base_url, pytestconfig):
     target = base_url + "works"
     response = requests.get(target)
     works = response.json()
@@ -168,6 +172,8 @@ def test_api_works_delete(base_url):
 
     # Проверяем, что найдена только одна запись
     assert len(found_works) == 1
+    expected_content_type = pytestconfig.getoption("content_type")
+    assert response.headers["Content-Type"] == expected_content_type
 
     # Получаем id найденной записи
     work_id = found_works[0]["id"]
