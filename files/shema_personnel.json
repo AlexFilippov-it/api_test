@@ -1,0 +1,48 @@
+{
+        "type": "object",
+        "properties": {
+            "headers": {"type": "object"},
+            "id": {"type": "integer"},
+            "resourceId": {"type": "integer"},
+            "militaryUnit": {"type": "string"},
+            "division": {"type": "string"},
+            "surName": {"type": "string"},
+            "name": {"type": "string"},
+            "fatherName": {"type": "string"},
+            "dateOfBirth": {"type": "string"},
+            "education": {"type": "string"},
+            "yearOfGraduation": {"type": "integer"},
+            "degree": {"type": "boolean"},
+            "positionAppointmentDate": {"type": "string"},
+            "militaryRankDate": {"type": "string"},
+            "passport": {"type": "string"},
+            "militaryId": {"type": "string"},
+            "driverLicense": {"type": "string"},
+            "levelMDK": {"type": "integer"},
+            "numberOfLoans": {"type": "integer"},
+            "numberOfViolations": {"type": "null"},
+            "vehicleCommanderLicense": {"type": "boolean"},
+            "equivalentDosePerYear": {"type": "string"},
+            "equivalentDosePerFiveYears": {"type": "string"},
+            "position": {
+                "type": "object",
+                "properties": {
+                    "headers": {"type": "object"},
+                    "id": {"type": "integer"},
+                    "title": {"type": "string"}
+                },
+                "required": ["id", "title"]
+            },
+            "militaryRank": {
+                "type": "object",
+                "properties": {
+                    "headers": {"type": "object"},
+                    "id": {"type": "integer"},
+                    "title": {"type": "string"}
+                },
+                "required": ["id", "title"]
+            },
+            "permits": {"type": "array"}
+        },
+        "required": ["id", "resourceId", "surName", "name", "fatherName", "dateOfBirth"]
+    }

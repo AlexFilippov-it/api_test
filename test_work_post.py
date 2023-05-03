@@ -1,4 +1,5 @@
 import requests
+import json
 import jsonschema
 import pytest
 import datetime
@@ -28,23 +29,8 @@ def test_url_content_type(base_url, request_method, pytestconfig):
 def test_api_json_schema_works(base_url):
     res = requests.get(base_url + "works")
 
-    schema = {
-        "type": "array",
-        "items": {
-            "type": "object",
-            "properties": {
-                "headers": {"type": "object"},
-                "id": {"type": "integer"},
-                "projectId": {"type": "integer"},
-                "text": {"type": "string"},
-                "duration": {"type": "integer"},
-                "progress": {"type": "string"},
-                "parent": {"type": "integer"},
-                "typeId": {"type": "integer"},
-            },
-            "required": ["id", "projectId", "text"]
-        }
-    }
+    with open("files/shema_works.json", "r") as f:
+        schema = json.load(f)
 
     jsonschema.validate(instance=res.json(), schema=schema)
 

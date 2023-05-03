@@ -1,0 +1,17 @@
+{
+        "type": "array",
+        "items": {
+            "type": "object",
+            "properties": {
+                "headers": {"type": "object"},
+                "id": {"type": "integer"},
+                "projectId": {"type": "integer"},
+                "text": {"type": "string"},
+                "duration": {"type": "integer"},
+                "progress": {"type": "string"},
+                "parent": {"type": "integer"},
+                "typeId": {"type": "integer"}
+            },
+            "required": ["id", "projectId", "text"]
+        }
+    }

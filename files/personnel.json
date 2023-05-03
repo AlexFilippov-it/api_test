@@ -1,0 +1,165 @@
+{
+    "id": 3,
+    "resourceId": 5,
+    "militaryUnit": "12543",
+    "division": "Управление",
+    "position": {
+        "id": 17,
+        "title": "Главный инженер в/ч"
+    },
+    "surName": "Бобрович - autotest",
+    "name": "Никодимович - autotest",
+    "fatherName": "Феофанович - autotest",
+    "militaryRank": {
+        "id": 19,
+        "title": "Полковник"
+    },
+    "dateOfBirth": "1978-06-22 00:00:00",
+    "education": "СПБ ВМИ",
+    "yearOfGraduation": 2000,
+    "degree": false,
+    "positionAppointmentDate": "2021-12-03 00:00:00",
+    "militaryRankDate": "2021-12-03 00:00:00",
+    "passport": "1356 387666 (УВД г. Волгоград 15.03.2021)",
+    "militaryId": "АА 805987 (ВА РВСН 15.06.2020)",
+    "driverLicense": "4388 762345 (код.0043 13.03.2015) В,В1",
+    "permits": [
+        {
+            "id": 1,
+            "permitId": 1,
+            "personId": 2,
+            "permitType": 1,
+            "startDateOfPermit": "2021-12-07 00:00:00",
+            "orderNumber": "№476",
+            "permitPeriod": 1
+        },
+        {
+            "id": 2,
+            "permitId": 2,
+            "personId": 2,
+            "permitType": 2,
+            "startDateOfPermit": "2020-09-02 00:00:00",
+            "orderNumber": "№0021",
+            "permitPeriod": 5
+        },
+        {
+            "id": 3,
+            "permitId": 3,
+            "personId": 2,
+            "permitType": 3,
+            "startDateOfPermit": "2021-03-16 00:00:00",
+            "orderNumber": "№003",
+            "permitPeriod": 5
+        },
+        {
+            "id": 4,
+            "permitId": 4,
+            "personId": 2,
+            "permitType": 4,
+            "startDateOfPermit": "2022-04-25 00:00:00",
+            "orderNumber": "№1/1632",
+            "permitPeriod": 1
+        },
+        {
+            "id": 5,
+            "permitId": 5,
+            "personId": 2,
+            "permitType": 5,
+            "startDateOfPermit": "2021-12-18 00:00:00",
+            "orderNumber": "№289",
+            "permitPeriod": 1
+        },
+        {
+            "id": 6,
+            "permitId": 6,
+            "personId": 2,
+            "permitType": 6,
+            "startDateOfPermit": "2021-11-23 00:00:00",
+            "orderNumber": "№053",
+            "permitPeriod": 1
+        },
+        {
+            "id": 7,
+            "permitId": 7,
+            "personId": 2,
+            "permitType": 7,
+            "startDateOfPermit": null,
+            "orderNumber": null,
+            "permitPeriod": 1
+        },
+        {
+            "id": 8,
+            "permitId": 8,
+            "personId": 2,
+            "permitType": 8,
+            "startDateOfPermit": "2021-12-06 00:00:00",
+            "orderNumber": "№038",
+            "permitPeriod": 5
+        },
+        {
+            "id": 9,
+            "permitId": 9,
+            "personId": 2,
+            "permitType": 9,
+            "startDateOfPermit": "2021-12-06 00:00:00",
+            "orderNumber": "№038",
+            "permitPeriod": 5
+        },
+        {
+            "id": 10,
+            "permitId": 10,
+            "personId": 2,
+            "permitType": 10,
+            "startDateOfPermit": "2021-10-27 00:00:00",
+            "orderNumber": "№115",
+            "permitPeriod": 1
+        },
+        {
+            "id": 11,
+            "permitId": 11,
+            "personId": 2,
+            "permitType": 13,
+            "startDateOfPermit": "2021-10-27 00:00:00",
+            "orderNumber": "№115",
+            "permitPeriod": 1
+        },
+        {
+            "id": 12,
+            "permitId": 12,
+            "personId": 2,
+            "permitType": 14,
+            "startDateOfPermit": "2021-11-29 00:00:00",
+            "orderNumber": "№345",
+            "permitPeriod": 1
+        },
+        {
+            "id": 13,
+            "permitId": 13,
+            "personId": 2,
+            "permitType": 15,
+            "startDateOfPermit": "2021-11-16 00:00:00",
+            "orderNumber": "№137",
+            "permitPeriod": 1
+        }
+    ],
+    "levelMDK": 98,
+    "numberOfLoans": 1,
+    "numberOfViolations": null,
+    "vehicleCommanderLicense": true,
+    "equivalentDosePerYear": 0.8,
+    "equivalentDosePerFiveYears": 2.6,
+    "maintanceExperience": [
+        {
+            "id": 1,
+            "personId": 1,
+            "vehicleId": 1,
+            "numberOfMaintances": 5
+        },
+        {
+            "id": 2,
+            "personId": 1,
+            "vehicleId": 2,
+            "numberOfMaintances": 3
+        }
+    ]
+}

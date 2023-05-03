@@ -29,28 +29,8 @@ def test_api_json_schema_resources(base_url):
     target = base_url + "resources"
     res = requests.get(target)
 
-    schema = {
-        "type": "array",
-        "items": {
-            "type": "object",
-            "properties": {
-                "headers": {"type": "object"},
-                "id": {"type": "integer"},
-                "title": {"type": "string"},
-                "quantity": {"type": ["integer", "null"]},
-                "type": {
-                    "type": ["object", "null"],
-                    "properties": {
-                        "headers": {"type": "object"},
-                        "id": {"type": "integer"},
-                        "title": {"type": "string"}
-                    },
-                    "required": ["id", "title"]
-                }
-            },
-            "required": ["id", "title"]
-        }
-    }
+    with open("files/shema_resources.json", "r") as f:
+        schema = json.load(f)
 
     data = res.json()
     jsonschema.validate(instance=data, schema=schema)

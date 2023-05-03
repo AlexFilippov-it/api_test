@@ -1,0 +1,22 @@
+{
+        "type": "array",
+        "items": {
+            "type": "object",
+            "properties": {
+                "headers": {"type": "object"},
+                "id": {"type": "integer"},
+                "title": {"type": "string"},
+                "quantity": {"type": ["integer", "null"]},
+                "type": {
+                    "type": ["object", "null"],
+                    "properties": {
+                        "headers": {"type": "object"},
+                        "id": {"type": "integer"},
+                        "title": {"type": "string"}
+                    },
+                    "required": ["id", "title"]
+                }
+            },
+            "required": ["id", "title"]
+        }
+    }
