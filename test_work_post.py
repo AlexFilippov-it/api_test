@@ -9,16 +9,16 @@ from test_db import get_db_connection
 # Test - 1. Check status code
 @pytest.mark.regres
 @pytest.mark.parametrize("code", [200])
-def test_url_status(base_url, code, request_method):
-    target = base_url + "works"
+def test_url_status(api_url_works, code, request_method):
+    target = api_url_works
     response = request_method(url=target)
     assert response.status_code == code
 
 
 # Test - 2. Check request Encoding and Content-Type
 @pytest.mark.regres
-def test_url_content_type(base_url, request_method, pytestconfig):
-    target = base_url + "works"
+def test_url_content_type(api_url_works, request_method, pytestconfig):
+    target = api_url_works
     response = request_method(url=target)
     expected_content_type = pytestconfig.getoption("content_type")
     assert response.headers["Content-Type"] == expected_content_type
@@ -26,8 +26,8 @@ def test_url_content_type(base_url, request_method, pytestconfig):
 
 # Test - 3. Check validate schema from answer
 @pytest.mark.regres
-def test_api_json_schema_works(base_url):
-    res = requests.get(base_url + "works")
+def test_api_json_schema_works(api_url_works):
+    res = requests.get(api_url_works)
 
     with open("files/shema_works.json", "r") as f:
         schema = json.load(f)
@@ -37,21 +37,13 @@ def test_api_json_schema_works(base_url):
 
 # Test - 4. Add a new record for table Works and after that check it
 @pytest.mark.regres
-def test_create_work(base_url, pytestconfig):
-    target = base_url + "works"
+def test_create_work(api_url_works, pytestconfig):
+    target = api_url_works
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    data = {
-        "id": 33,
-        "projectId": 1,
-        "text": "autotest - произвольный текcт для проверки поля",
-        "start_date": now,
-        "duration": 5,
-        "progress": 0,
-        "parent": 0,
-        "typeId": 1,
-        "resources": [{"id": 3, "title": "ПЭВМ", "type": {"id": 1, "title": "ВВСТ"}}]
-    }
+    with open("files/create_work.json") as f:
+        data = json.load(f)
+        data["start_date"] = now
 
     response = requests.post(url=target, json=data)
     assert response.status_code == 201
@@ -80,8 +72,8 @@ def test_create_work(base_url, pytestconfig):
 
 # Test - 5. Check created record with using By ID from table Works
 @pytest.mark.regres
-def test_get_one_work_by_id(base_url, pytestconfig):
-    target = base_url + "works"
+def test_get_one_work_by_id(api_url_works, pytestconfig):
+    target = api_url_works
     # Получение id созданной записи из БД
     conn = get_db_connection()
     cur = conn.cursor()
@@ -93,7 +85,7 @@ def test_get_one_work_by_id(base_url, pytestconfig):
     id = result[0]
 
     # Формирование URL для GET-запроса из полученого id и выполняем поиск по нему
-    target = base_url + f"works/{id}"
+    target = f"{api_url_works}/{id}"
 
     # Выполнение GET-запроса и проверка ответа
     response = requests.get(target)
@@ -107,8 +99,8 @@ def test_get_one_work_by_id(base_url, pytestconfig):
 
 # Test - 6. Look for a record which include "autotest" and update it with using Put request
 @pytest.mark.regres
-def test_api_works_update(base_url):
-    target = base_url + "works"
+def test_api_works_update(api_url_works):
+    target = api_url_works
     response = requests.get(target)
 
     if response.status_code == 200:
@@ -120,20 +112,14 @@ def test_api_works_update(base_url):
                 break
 
         # Отправляем PUT-запрос на обновление работы с ID = 2
-        target = base_url + "works/2"
+        target = f"{api_url_works}/{id}"
         now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        data = {
-            "id": id,
-            "projectId": 1,
-            "text": "autotest - обновленный текcт для проверки поля",
-            "start_date": now,
-            "duration": 4,
-            "progress": 1,
-            "parent": 1,
-            "typeId": 2,
-            "resources": [{"id": 4, "title": "НОО", "type": {"id": 2, "title": "Личный состав"}}]
-        }
+        with open("files/update_work.json") as f:
+            data = json.load(f)
+            data["id"] = id
+            data["start_date"] = now
+
         response = requests.put(target, json=data)
 
         if response.status_code == 204:
@@ -147,8 +133,8 @@ def test_api_works_update(base_url):
 
 # Test - 7. Check delete requests
 @pytest.mark.regres
-def test_api_works_delete(base_url, pytestconfig):
-    target = base_url + "works"
+def test_api_works_delete(api_url_works, pytestconfig):
+    target = api_url_works
     response = requests.get(target)
     works = response.json()
     found_works = []
@@ -165,7 +151,7 @@ def test_api_works_delete(base_url, pytestconfig):
     work_id = found_works[0]["id"]
 
     # Отправляем DELETE запрос для удаления найденной записи
-    response = requests.delete(base_url + "works/" + str(work_id))
+    response = requests.delete(f"{api_url_works}/{work_id}")
 
     # Проверяем, что статус код ответа равен 204 (No Content)
     assert response.status_code == 204

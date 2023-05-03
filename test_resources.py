@@ -8,16 +8,16 @@ from test_db import get_db_connection
 # Test - 1. Check status code
 @pytest.mark.regres
 @pytest.mark.parametrize("code", [200])
-def test_url_status(base_url, code, request_method):
-    target = base_url + "resources"
+def test_url_status(api_url_resources, code, request_method):
+    target = api_url_resources
     response = request_method(url=target)
     assert response.status_code == code
 
 
 # Test - 2. Check request Encoding and Content-Type
 @pytest.mark.regres
-def test_url_content_type(base_url, request_method, pytestconfig):
-    target = base_url + "resources"
+def test_url_content_type(api_url_resources, request_method, pytestconfig):
+    target = api_url_resources
     response = request_method(url=target)
     expected_content_type = pytestconfig.getoption("content_type")
     assert response.headers["Content-Type"] == expected_content_type
@@ -25,8 +25,8 @@ def test_url_content_type(base_url, request_method, pytestconfig):
 
 # Test - 3. Check validate schema from answer
 @pytest.mark.regres
-def test_api_json_schema_resources(base_url):
-    target = base_url + "resources"
+def test_api_json_schema_resources(api_url_resources):
+    target = api_url_resources
     res = requests.get(target)
 
     with open("files/shema_resources.json", "r") as f:
@@ -38,7 +38,7 @@ def test_api_json_schema_resources(base_url):
 
 # Test - 4. Add new resource
 @pytest.mark.regres
-def test_add_resource(base_url):
+def test_add_resource(api_url_resources):
     # Получаем последний id из базы данных
     conn = get_db_connection()
     cur = conn.cursor()
@@ -49,17 +49,12 @@ def test_add_resource(base_url):
 
     # Создаем данные для запроса
     new_id = last_id + 1
-    data = {
-        "id": new_id,
-        "title": "autotest - произвольный текст для проверки поля",
-        "type": {
-            "id": 1,
-            "title": "ВВСТ"
-        }
-    }
+    with open("files/resource_id.json") as f:
+        data = json.load(f)
+        data["id"] = new_id
 
     # Отправляем запрос
-    res = requests.post(base_url + "resources", json=data)
+    res = requests.post(api_url_resources, json=data)
 
     # Проверяем статус код
     assert res.status_code == 201
@@ -78,7 +73,7 @@ def test_add_resource(base_url):
 
 # Test - 5. Update resource by ID
 @pytest.mark.regres
-def test_update_resource(base_url):
+def test_update_resource(api_url_resources):
     # Находим запись с title, содержащим "autotest"
     try:
         conn = get_db_connection()
@@ -96,18 +91,13 @@ def test_update_resource(base_url):
     # Извлекаем id из записи
     resource_id = row[0]
 
-    # Создаем данные для запроса
-    data = {
-        "id": resource_id,
-        "title": "autotest - обновленный текст для проверки поля",
-        "type": {
-            "id": 1,
-            "title": "Личный состав"
-        }
-    }
+    # Загружаем данные для запроса из файла
+    with open("files/resource_id_update.json") as f:
+        data = json.load(f)
+        data["id"] = resource_id
 
     # Отправляем запрос
-    res = requests.put(base_url + f"resources/{resource_id}", json=data)
+    res = requests.put(f"{api_url_resources}/{resource_id}", json=data)
 
     # Проверяем статус код
     assert res.status_code == 204
@@ -115,8 +105,8 @@ def test_update_resource(base_url):
 
 # Test - 6. Look for words like autotest with using get requests
 @pytest.mark.regres
-def test_check_autotest_resources(base_url, code, request_method):
-    target = base_url + "resources"
+def test_check_autotest_resources(api_url_resources, code, request_method):
+    target = api_url_resources
     response = requests.get(target)
 
     assert response.status_code == code, f"Ожидался код статуса {code}, но получен {response.status_code}"
@@ -132,7 +122,7 @@ def test_check_autotest_resources(base_url, code, request_method):
     autotest_id = autotest_resources[0]['id']
 
     # Создадим новый запрос, используя ID найденного ресурса
-    target = base_url + f"resources/{autotest_id}"
+    target = f"{api_url_resources}/{autotest_id}"
     response = requests.get(target)
 
     # Проверим, что ответ содержит статус-код 200
@@ -145,8 +135,8 @@ def test_check_autotest_resources(base_url, code, request_method):
 
 # Test - 7. Check delete requests by ID
 @pytest.mark.regres
-def test_delete_autotest_resource(base_url):
-    target = base_url + "resources"
+def test_delete_autotest_resource(api_url_resources):
+    target = api_url_resources
     response = requests.get(target)
 
     assert response.status_code == 200, f"Expected status code 200, but got {response.status_code}"
@@ -159,7 +149,7 @@ def test_delete_autotest_resource(base_url):
     autotest_id = autotest_resources[0]['id']
 
     # Удалим найденный ресурс
-    target = base_url + f"resources/{autotest_id}"
+    target = f"{api_url_resources}/{autotest_id}"
     response = requests.delete(target)
 
     # Проверим, что ответ содержит статус-код 204

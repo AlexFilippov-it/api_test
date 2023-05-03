@@ -31,6 +31,36 @@ def pytest_addoption(parser):
 
 
 @pytest.fixture
+def api_url_military_rank_list(request):
+    base_url = request.config.getoption("--url")
+    return f"{base_url}resources/personnel/military_rank_list/"
+
+
+@pytest.fixture
+def api_url_resources_personnel_positions(request):
+    base_url = request.config.getoption("--url")
+    return f"{base_url}resources/personnel/positions/"
+
+
+@pytest.fixture
+def api_url_resources_personnel(request):
+    base_url = request.config.getoption("--url")
+    return f"{base_url}resources/personnel/"
+
+
+@pytest.fixture
+def api_url_resources(request):
+    base_url = request.config.getoption("--url")
+    return f"{base_url}resources"
+
+
+@pytest.fixture
+def api_url_works(request):
+    base_url = request.config.getoption("--url")
+    return f"{base_url}works"
+
+
+@pytest.fixture
 def base_url(request):
     return request.config.getoption("--url")
 

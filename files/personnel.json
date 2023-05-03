@@ -4,14 +4,14 @@
     "militaryUnit": "12543",
     "division": "Управление",
     "position": {
-        "id": 17,
+        "id": 36,
         "title": "Главный инженер в/ч"
     },
     "surName": "Бобрович - autotest",
     "name": "Никодимович - autotest",
     "fatherName": "Феофанович - autotest",
     "militaryRank": {
-        "id": 19,
+        "id": 35,
         "title": "Полковник"
     },
     "dateOfBirth": "1978-06-22 00:00:00",

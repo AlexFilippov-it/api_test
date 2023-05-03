@@ -1,0 +1,11 @@
+{
+        "id": 33,
+        "projectId": 1,
+        "text": "autotest - произвольный текcт для проверки поля",
+        "start_date": "",
+        "duration": 5,
+        "progress": 0,
+        "parent": 0,
+        "typeId": 1,
+        "resources": [{"id": 3, "title": "ПЭВМ", "type": {"id": 1, "title": "ВВСТ"}}]
+    }

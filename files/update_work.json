@@ -1,0 +1,11 @@
+{
+            "id": 0,
+            "projectId": 1,
+            "text": "autotest - обновленный текcт для проверки поля",
+            "start_date": "",
+            "duration": 4,
+            "progress": 1,
+            "parent": 1,
+            "typeId": 2,
+            "resources": [{"id": 4, "title": "НОО", "type": {"id": 2, "title": "Личный состав"}}]
+        }

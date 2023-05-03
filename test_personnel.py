@@ -9,7 +9,7 @@ from test_db import get_db_connection
 # Check Encoding, Content-Type and status code with using post requests
 @pytest.mark.regres
 @pytest.mark.parametrize("code", [201])
-def test_military_rank_list(base_url, code, pytestconfig):
+def test_military_rank_list(code, api_url_military_rank_list, pytestconfig):
     # Получение последнего id из таблицы vector.military_rank_list
     conn = get_db_connection()
     cur = conn.cursor()
@@ -18,7 +18,7 @@ def test_military_rank_list(base_url, code, pytestconfig):
     cur.close()
     conn.close()
 
-    target = base_url + "resources/personnel/military_rank_list"
+    target = api_url_military_rank_list
     data = {"id": last_id + 1, "title": "Полковник - autotest"}
 
     response = requests.post(target, json=data)
@@ -37,11 +37,48 @@ def test_military_rank_list(base_url, code, pytestconfig):
     assert len(rows) == 1, "Ошибка: в колонке title больше 1-ой записи, содержащих 'autotest'"
 
 
-# Test - 2. Create a new record for resources/personnel/positions,
+# Test - 2. Check all records with using GET to resources/personnel/military_rank_list
+def test_position_list_get_all(code, api_url_military_rank_list, pytestconfig):
+    # Подключаемся к базе и проверяем количество записей
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT COUNT(*) FROM vector.military_rank_list")
+    num_positions = cur.fetchone()[0]
+    cur.close()
+    conn.close()
+
+    # Отправка GET-запроса к API
+    response = requests.get(api_url_military_rank_list)
+
+    # Проверка статуса ответа
+    assert response.status_code == 200, f"Status code is {response.status_code}"
+    expected_content_type = pytestconfig.getoption("content_type")
+    assert response.headers["Content-Type"] == expected_content_type
+
+    # Получение количества записей в ответе
+    num_ranks = len(response.json())
+
+    # Проверка количества записей в таблице и в ответе
+    assert num_ranks == num_positions, f"Number of ranks is {num_ranks}, expected {num_positions}"
+
+
+# Test - 3. Check schema validate position_list_get_all
+def test_position_list_get_all_validator(api_url_military_rank_list, pytestconfig):
+    res = requests.get(api_url_military_rank_list)
+
+    with open("files/personnel.json", "r") as f:
+        schema = json.load(f)
+
+    jsonschema.validate(instance=res.json()[0], schema=schema)
+    expected_content_type = pytestconfig.getoption("content_type")
+    assert res.headers["Content-Type"] == expected_content_type
+
+
+# Test - 4. Create a new record for resources/personnel/positions,
 # Check Encoding, Content-Type and status code with using post requests
 @pytest.mark.regres
 @pytest.mark.parametrize("code", [201])
-def test_position_list(base_url, code, pytestconfig):
+def test_position_list(code, api_url_resources_personnel_positions, pytestconfig):
     # Получение последнего id из таблицы vector.military_rank_list
     conn = get_db_connection()
     cur = conn.cursor()
@@ -50,7 +87,7 @@ def test_position_list(base_url, code, pytestconfig):
     cur.close()
     conn.close()
 
-    target = base_url + "resources/personnel/positions"
+    target = api_url_resources_personnel_positions
     data = {"id": last_id + 1, "title": "Главный инженер в/ч - autotest"}
 
     response = requests.post(target, json=data)
@@ -69,9 +106,9 @@ def test_position_list(base_url, code, pytestconfig):
     assert len(rows) == 1, "Ошибка: в колонке title больше 1-ой записи, содержащих 'autotest'"
 
 
-# Test - 3. Create a new record for resources/personnel,
+# Test - 5. Create a new record for resources/personnel,
 # Check Encoding, Content-Type and status code with using post requests
-def test_create_personnel(base_url, pytestconfig):
+def test_create_personnel(api_url_resources_personnel, pytestconfig):
     # Получаем id из таблицы vector.positions_list
     conn = get_db_connection()
     cur = conn.cursor()
@@ -104,7 +141,7 @@ def test_create_personnel(base_url, pytestconfig):
         json.dump(payload, f, indent=4, ensure_ascii=False)  # записываем измененный объект в файл
 
     # Отправляем POST запрос
-    res = requests.post(base_url + "resources/personnel", json=payload)
+    res = requests.post(api_url_resources_personnel, json=payload)
 
     # Проверяем статус код
     assert res.status_code == 201, f"Ошибка: неверный статус код {res.status_code}"
@@ -112,8 +149,8 @@ def test_create_personnel(base_url, pytestconfig):
     assert res.headers["Content-Type"] == expected_content_type
 
 
-# Test - 4. Check created a new record vector.personnel with autotest
-def test_personnel_contains_autotest(base_url):
+# Test - 6. Check created a new record vector.personnel with autotest
+def test_personnel_contains_autotest():
     # Выполняем запрос для проверки наличия только одной записи с подстрокой "autotest" в поле "name"
     conn = get_db_connection()
     cur = conn.cursor()
@@ -129,9 +166,9 @@ def test_personnel_contains_autotest(base_url):
     assert count == 1, f"Found {count} personnel records with 'autotest' in surName, name, and fatherName fields"
 
 
-# Test - 5. Check validate schema from answer, also Encoding, Content-Type and status code
-def test_api_json_schema_validator(base_url, pytestconfig):
-    res = requests.get(base_url + "resources/personnel")
+# Test - 7. Check validate schema from answer, also Encoding, Content-Type and status code
+def test_api_json_schema_validator(api_url_resources_personnel, pytestconfig):
+    res = requests.get(api_url_resources_personnel)
 
     with open("files/shema_personnel.json", "r") as f:
         schema = json.load(f)
@@ -141,9 +178,9 @@ def test_api_json_schema_validator(base_url, pytestconfig):
     assert res.headers["Content-Type"] == expected_content_type
 
 
-# Test - 6. Check a record by ID, also Encoding and Content-Type
+# Test - 8. Check a record by ID, also Encoding and Content-Type
 @pytest.mark.regres
-def test_get_personnel_by_id(base_url, pytestconfig):
+def test_get_personnel_by_id(api_url_resources_personnel, pytestconfig):
     # Получаем последнее цифровое значение из колонки "id" таблицы "personnel"
     conn = get_db_connection()
     cur = conn.cursor()
@@ -155,7 +192,7 @@ def test_get_personnel_by_id(base_url, pytestconfig):
     assert last_id is not None
 
     # Делаем GET запрос к ресурсу "personnel" с полученным id
-    res = requests.get(f"{base_url}resources/personnel/{last_id}")
+    res = requests.get(f"{api_url_resources_personnel}{last_id}")
 
     # Проверяем, что запрос завершился успешно, а также Encoding, Content-Type
     assert res.status_code == 200
@@ -166,7 +203,7 @@ def test_get_personnel_by_id(base_url, pytestconfig):
     assert "autotest" in res.json()["name"]
 
 
-# Test - 7. Delete all records from base permits_to_personnel (временно, после правок кода на бэке удалить)
+# Test - 9. Delete all records from base permits_to_personnel (временно, после правок кода на бэке удалить)
 def test_delete_permits_by_id(base_url):
     # Получаем значение колонки "id" из таблицы "permits_to_personnel"
     conn = get_db_connection()
@@ -192,8 +229,8 @@ def test_delete_permits_by_id(base_url):
     assert len(permits) == 0
 
 
-# Test - 8. Delete personnel by id, check Status code
-def test_delete_personnel_by_id(base_url):
+# Test - 10. Delete personnel by id, check Status code
+def test_delete_personnel_by_id(api_url_resources_personnel):
     # Получаем все записи, содержащие слово "autotest" в колонке "name" таблицы "personnel"
     conn = get_db_connection()
     cur = conn.cursor()
@@ -202,7 +239,7 @@ def test_delete_personnel_by_id(base_url):
     cur.close()
 
     # Создаем новый тест для каждой записи, содержащей слово "autotest" в колонке "name"
-    url = f"{base_url}resources/personnel/{personnel_id}"
+    url = f"{api_url_resources_personnel}{personnel_id}"
     response = requests.delete(url)
 
     # Проверяем, что статус код равен 204,
@@ -217,8 +254,8 @@ def test_delete_personnel_by_id(base_url):
     assert len(personnel) == 0
 
 
-# Test - 9. Delete personnel military rank by ID, check Status code
-def test_delete_personnel_military_rank(base_url):
+# Test - 11. Delete personnel military rank by ID, check Status code
+def test_delete_personnel_military_rank(api_url_military_rank_list):
     # Получаем ID записи, содержащей слово "autotest" в колонке "title" таблицы "military_rank_list"
     conn = get_db_connection()
     cur = conn.cursor()
@@ -227,7 +264,7 @@ def test_delete_personnel_military_rank(base_url):
     cur.close()
 
     # Отправляем DELETE запрос на URL, содержащий ID военного звания
-    url = f"{base_url}resources/personnel/military_rank_list/{military_rank_id}"
+    url = f"{api_url_military_rank_list}{military_rank_id}"
     response = requests.delete(url)
 
     # Проверяем, что статус код равен 204
@@ -243,8 +280,8 @@ def test_delete_personnel_military_rank(base_url):
     assert len(personnel) == 0
 
 
-# Test - 10. Delete Positions list by ID, check Status code
-def test_delete_positions_by_id(base_url):
+# Test - 12. Delete Positions list by ID, check Status code
+def test_delete_positions_by_id(api_url_resources_personnel_positions):
     # Получаем ID записей, содержащие слово "autotest" в колонке "title" таблицы "positions_list"
     conn = get_db_connection()
     cur = conn.cursor()
@@ -255,7 +292,7 @@ def test_delete_positions_by_id(base_url):
     # Отправляем DELETE запрос на URL, содержащий ID должностей
     for p in positions:
         position_id = p[0]
-        url = f"{base_url}resources/personnel/positions/{position_id}"
+        url = f"{api_url_resources_personnel_positions}{position_id}"
         response = requests.delete(url)
 
         # Проверяем, что статус код равен 204
