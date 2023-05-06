@@ -38,7 +38,7 @@ def test_military_rank_list(code, api_url_military_rank_list, pytestconfig):
 
 
 # Test - 2. Check all records with using GET to resources/personnel/military_rank_list
-def test_position_list_get_all(code, api_url_military_rank_list, pytestconfig):
+def test_military_rank_list_get_all(code, api_url_military_rank_list, pytestconfig):
     # Подключаемся к базе и проверяем количество записей
     conn = get_db_connection()
     cur = conn.cursor()
@@ -62,11 +62,11 @@ def test_position_list_get_all(code, api_url_military_rank_list, pytestconfig):
     assert num_ranks == num_positions, f"Number of ranks is {num_ranks}, expected {num_positions}"
 
 
-# Test - 3. Check schema validate position_list_get_all
-def test_position_list_get_all_validator(api_url_military_rank_list, pytestconfig):
+# Test - 3. Check schema validate military_rank_list
+def test_military_rank_list_get_all_validator(api_url_military_rank_list, pytestconfig):
     res = requests.get(api_url_military_rank_list)
 
-    with open("files/personnel.json", "r") as f:
+    with open("files/shema_military_rank.json", "r") as f:
         schema = json.load(f)
 
     jsonschema.validate(instance=res.json()[0], schema=schema)

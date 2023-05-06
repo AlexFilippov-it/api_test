@@ -161,3 +161,4 @@ cython_debug/
 
 examle.py
 test_db.py
+.DS_Store

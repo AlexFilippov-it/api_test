@@ -111,7 +111,7 @@ def test_api_works_update(api_url_works):
                 id = work["id"]
                 break
 
-        # Отправляем PUT-запрос на обновление работы с ID = 2
+        # Отправляем PUT-запрос на обновление работы с ID
         target = f"{api_url_works}/{id}"
         now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
