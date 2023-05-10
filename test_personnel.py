@@ -79,7 +79,7 @@ def test_military_rank_list_get_all_validator(api_url_military_rank_list, pytest
 @pytest.mark.regres
 @pytest.mark.parametrize("code", [201])
 def test_position_list(code, api_url_resources_personnel_positions, pytestconfig):
-    # Получение последнего id из таблицы vector.military_rank_list
+    # Получение последнего id из таблицы vector.positions_list
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute("SELECT MAX(id) FROM vector.positions_list")
@@ -106,7 +106,7 @@ def test_position_list(code, api_url_resources_personnel_positions, pytestconfig
     assert len(rows) == 1, "Ошибка: в колонке title больше 1-ой записи, содержащих 'autotest'"
 
 
-# Test - 5. Create a new record for resources/personnel,
+# Test - 5. Create a new record for resources/personnel, (Добавить, если таблица пустая, то создаем с id 1)
 # Check Encoding, Content-Type and status code with using post requests
 def test_create_personnel(api_url_resources_personnel, pytestconfig):
     # Получаем id из таблицы vector.positions_list

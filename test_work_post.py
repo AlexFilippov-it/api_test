@@ -3,7 +3,8 @@ import json
 import jsonschema
 import pytest
 import datetime
-from test_db import get_db_connection
+from test_db_connection import get_db_connection
+
 
 
 # Test - 1. Check status code
